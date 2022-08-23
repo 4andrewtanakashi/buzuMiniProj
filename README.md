@@ -13,13 +13,13 @@
 | React Native |
 
 ## Roteiro Básico:
-- [] CRUD
-- [] Usar Route Natigatio
-- [] Usar Storage
+- [ ] CRUD
+- [ ] Usar Route Natigatio
+- [ ] Usar Storage
 
 ## Roteiro Extra:
-- [] Fidelidade do design da interface
-- [] Teste dos componentes
+- [ ] Fidelidade do design da interface
+- [ ] Teste dos componentes
 
 ## Descrição dos commits
 Commits serão feitos de acordo com a seguinte tabela:
