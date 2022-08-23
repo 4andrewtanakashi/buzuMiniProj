@@ -14,7 +14,7 @@
 
 ## Roteiro Básico:
 - [ ] CRUD
-- [ ] Usar Route Natigatio
+- [ ] Usar Route Navigation
 - [ ] Usar Storage
 
 ## Roteiro Extra:
