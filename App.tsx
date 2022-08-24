@@ -1,13 +1,24 @@
 import React from 'react';
 import {StatusBar} from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+
 
 import {Home} from './src/pages/Home';
+import {ItemForm} from './src/pages/ItemForm';
+
+const Stack = createNativeStackNavigator();
 
 export default function App () {
   return (
        <>
-            <StatusBar barStyle="light-content" />
-            <Home/>
+          <NavigationContainer>
+                <Stack.Navigator>
+                    {/* <StatusBar barStyle="light-content" /> */}
+                    <Stack.Screen name="Home" component={Home}/>
+                    <Stack.Screen name="FormEdit" component={ItemForm}/>
+                </Stack.Navigator>
+          </NavigationContainer>
        </>
   );
 }
