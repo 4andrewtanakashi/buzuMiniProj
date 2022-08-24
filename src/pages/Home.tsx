@@ -7,8 +7,10 @@ import {
     FlatList, //Muitos elementos
     Alert,
 } from 'react-native';
-
 import { useNavigation } from "@react-navigation/native";
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
+import EvilIcons from 'react-native-vector-icons/EvilIcons';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
 import {Button} from '../components/Button';
 
@@ -21,6 +23,8 @@ export function Home () {
                 value={"Cadastrar"} 
                 onPress={_ => navigation.navigate("FormEdit" as never)}
             />
+            <EvilIcons name={'trash'} size={30} color="#F04" />
+            <MaterialIcons name="mode-edit" size={30} />
         </View>
     );
 }
