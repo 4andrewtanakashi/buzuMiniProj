@@ -1,12 +1,7 @@
 import { Alert } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { KeyValuePair } from '@react-native-async-storage/async-storage/lib/typescript/types';
-
-export interface DataItem {
-    id: string;
-    nome: string;
-    preco: number;
-}
+import {DataItem} from '../utils/Utils';
 
 export async function saveData  (data : DataItem) {
     try {
@@ -27,6 +22,6 @@ export async function getMultiple () {
     } catch(e : any) {
         Alert.alert(e);
     }
-    console.log("getAllKeysData:", values);
+    console.log("getMultiple:", values);
     return values;
 }

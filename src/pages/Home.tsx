@@ -7,9 +7,10 @@ import {
     Alert,
 } from 'react-native';
 import { useNavigation } from "@react-navigation/native";
-import {getMultiple, DataItem} from '../service/Crud';
+import {getMultiple} from '../service/Crud';
 import {Button} from '../components/Button';
 import {CardItem} from '../components/CardItem';
+import {DataItem, DataItemConst} from '../utils/Utils';
 
 export function Home () {
     const navigation = useNavigation();
@@ -20,18 +21,27 @@ export function Home () {
 
     useEffect(
         () => {
-            
+
+            let tempList : DataItem[] = [];
             getMultiple().then(
-                listValues => listValues.map(elem => console.log(JSON.parse(elem[1] || '')))
+                listValues => {
+                    listValues.map(elem => tempList.push(JSON.parse(elem[1] || '')));
+                    if (tempList.length > 0) {
+                        tempList.map( elemTemp => {
+                            console.log("elemTemp: ", elemTemp, typeof(elemTemp));
+                            console.log("elemTemp.id: ", elemTemp.id);
+                        });
+                        setValueList(tempList);
+                    }
+
+                }
             );
 
             if (valueList.length <= 0)
                 setMessageItem(<Text style={[stylesCustom.title]}> Não há items </Text>);
             else
-                setMessageItem(<Text style={[stylesCustom.title]}> List Items: </Text>);
+                setMessageItem(<Text style={[stylesCustom.title]}> Lista de Itens: </Text>);
 
-            // console.log(valueList.length);
-            // console.log(messageItem);
         },
     [valueList]); // Toda vez que atualizar o valueInput o useEffect é chamado
 
