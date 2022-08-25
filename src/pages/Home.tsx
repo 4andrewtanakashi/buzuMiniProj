@@ -1,30 +1,64 @@
-import React from 'react';
+import React, { useState, useEffect }  from 'react';
 import {
     View,
     Text,
     StyleSheet,
-    TextInput,
     FlatList, //Muitos elementos
     Alert,
 } from 'react-native';
 import { useNavigation } from "@react-navigation/native";
-import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
-import EvilIcons from 'react-native-vector-icons/EvilIcons';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-
+import {getMultiple, DataItem} from '../service/Crud';
 import {Button} from '../components/Button';
+import {CardItem} from '../components/CardItem';
 
 export function Home () {
     const navigation = useNavigation();
+    const [valueList, setValueList] = useState<DataItem[]>([]);
+    const [messageItem, setMessageItem] = useState(
+        <Text style={[stylesCustom.title]}> List Items: </Text>
+    );
+
+    useEffect(
+        () => {
+            
+            getMultiple().then(
+                listValues => listValues.map(elem => console.log(JSON.parse(elem[1] || '')))
+            );
+
+            if (valueList.length <= 0)
+                setMessageItem(<Text style={[stylesCustom.title]}> Não há items </Text>);
+            else
+                setMessageItem(<Text style={[stylesCustom.title]}> List Items: </Text>);
+
+            // console.log(valueList.length);
+            // console.log(messageItem);
+        },
+    [valueList]); // Toda vez que atualizar o valueInput o useEffect é chamado
 
     return(
         <View style={stylesCustom.container}>
+            
             <Button 
                 value={"Cadastrar"} 
                 onPress={_ => navigation.navigate("FormEdit" as never)}
             />
-            <EvilIcons name={'trash'} size={30} color="#F04" />
-            <MaterialIcons name="mode-edit" size={30} />
+
+            {messageItem}
+
+            <FlatList
+                data={valueList}
+                keyExtractor={ (item : any)  => item.id  }
+                renderItem={({item}) => (
+                    <CardItem
+                        title={item.nome}
+                        value={item.preco}
+                        //onPress={() => handleDelete(item)}
+                    />
+                ) }
+            />
+
+
+            
         </View>
     );
 }
@@ -38,10 +72,11 @@ const stylesCustom = StyleSheet.create(
             paddingHorizontal: 30
         },
         title: {
-            color: 'white',
+            color: 'black',
             fontSize:24,
             fontWeight: 'bold',
-            padding:15
+            padding:15,
+            marginTop: 50
         },
     
     }

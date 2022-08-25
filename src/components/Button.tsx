@@ -39,7 +39,6 @@ const styleButton = StyleSheet.create({
         width: 120,
         height: 50,
         flexDirection: 'row',
-
     },
     buttonFont: {
         color: '#FFF',

@@ -7,12 +7,16 @@ import {
     View,
     Image
 } from 'react-native';
+import EvilIcons from 'react-native-vector-icons/EvilIcons';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
 interface ButtonProps extends TouchableOpacityProps {
-    value: string;
+    title: string;
+    value: number;
 }
 
-export function Button ({value, ...rest} : ButtonProps) {
+export function CardItem ({title, value,...rest} : ButtonProps) {
+
     return(
         <View style={styleButton.containerButton}>
             <TouchableOpacity 
@@ -21,7 +25,10 @@ export function Button ({value, ...rest} : ButtonProps) {
                 {...rest}
                 >
                 <Image style={styleButton.imgAdjust} source={require('../img/plus.png')} />
+                <Text style={styleButton.buttonFont}>{title}</Text>
                 <Text style={styleButton.buttonFont}>{value}</Text>
+                <EvilIcons name={'trash'} size={30} color="#F04" />
+                <MaterialIcons name="mode-edit" size={30} />
             </ TouchableOpacity>
         </View>
     );

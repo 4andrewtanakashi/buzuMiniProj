@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import {
     View,
     Text,
@@ -8,40 +8,57 @@ import {
     Alert,
 } from 'react-native';
 
-import {Button} from '../components/Button';
 import { useNavigation } from "@react-navigation/native";
+import AntDesign from 'react-native-vector-icons/AntDesign';
 
-interface ValueList {
-    id: string;
-    name: string;
-}
+import { Button } from '../components/Button';
+import {saveData} from '../service/Crud';
 
-export function ItemForm () {
+export function ItemForm() {
     const navigation = useNavigation();
-    const [valueInput, setValueInput] = useState('');
-    const [valueList, setValueList] = useState<ValueList[]>([]);
-    const [messageItem, setMessageItem] = useState('none');
 
-    return(
+    //Valores dos campos
+    const [valueInputNome, setValueInputNome] = useState('');
+    const [valueInputPreco, setValueInputPreco] = useState(0);
+
+    function handleSave() {
+        const data = {
+            id: String(new Date().getTime()),
+            nome: valueInputNome,
+            preco: valueInputPreco
+        };
+
+        saveData(data);
+    }
+
+    return (
         <View style={stylesCustom.container}>
+            <AntDesign.Button
+                name="close"
+                color="black"
+                backgroundColor="#FFFA"
+                style={stylesCustom.buttonGoBack}
+                onPress={_ => navigation.navigate("Home" as never)}
+            />
+
             <Text>Título do produto</Text>
-            <TextInput 
+            <TextInput
                 style={stylesCustom.input}
                 placeholder="Meu Produto"
                 placeholderTextColor="#000"
-                //onChangeText={value => {value !== ''? setValueInput(value) : Alert.alert('Digite algo')}}
+                onChangeText={value => {value !== ''? setValueInputNome(value) : Alert.alert('Digite algo')}}
             />
 
             <Text>Valor</Text>
-            <TextInput 
+            <TextInput
                 style={stylesCustom.input}
                 placeholder="R$ 99, 99"
                 placeholderTextColor="#000"
-                //onChangeText={value => {value !== ''? setValueInput(value) : Alert.alert('Digite algo')}}
+                onChangeText={value => {value !== ''? setValueInputPreco(Number(value)) : Alert.alert('Digite algo')}}
             />
-            <Button 
-                value={"Salvar"} 
-                onPress={_ => navigation.navigate("Home" as never)}
+            <Button
+                value={"Salvar"}
+                onPress={handleSave}
             />
         </View>
     );
@@ -57,20 +74,23 @@ const stylesCustom = StyleSheet.create(
         },
         title: {
             color: 'white',
-            fontSize:24,
+            fontSize: 24,
             fontWeight: 'bold',
-            padding:15
+            padding: 15
         },
         input: {
             backgroundColor: '#FFF9',
             borderColor: '#000A',
             borderWidth: 1.5,
-            color: '#FFF',
+            color: '#000',
             fontSize: 18,
-            padding:10,
-            mariginTop:30,
+            padding: 10,
+            mariginTop: 30,
             borderRadius: 7
         },
-    
+        buttonGoBack: {
+            alignItems: 'flex-end',
+            justifyContent: 'flex-end'
+        }
     }
 );
