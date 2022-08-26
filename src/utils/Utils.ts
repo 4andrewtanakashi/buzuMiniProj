@@ -15,6 +15,6 @@ export function dataItemNew (): DataItem  {
 export type RootStackParams = {
     Home: any;
     ItemForm: {
-        item: DataItem;
+        item?: DataItem;
     };
   };

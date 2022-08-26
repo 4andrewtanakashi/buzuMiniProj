@@ -26,12 +26,12 @@ export function ItemForm ( {route} : Props) : JSX.Element  {
 
     useEffect(
         () => {
-            if (route !== undefined) {
+            if (route.params !== undefined) {
                 console.log("route.params: ", route.params);
                 console.log("route.params.item: ", route.params.item);
-                setValueInputNome(route.params.item.nome);
-            } if (route !== undefined)
-                setValueInputPreco(route.params.item.preco);
+                setValueInputNome(route.params.item?.nome || '');
+                setValueInputPreco(route.params.item?.preco || 0);
+            }   
         }
     );
 
