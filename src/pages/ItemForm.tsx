@@ -14,6 +14,7 @@ import { Button } from '../components/Button';
 import {saveData} from '../service/Crud';
 import { NativeStackNavigationProp, NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParams } from '../utils/Utils';
+import { Top } from '../interface/Top';
 
 type Props = NativeStackScreenProps<RootStackParams, "ItemForm">;
 
@@ -46,48 +47,51 @@ export function ItemForm ( {route} : Props) : JSX.Element  {
     }
 
     return (
-        <View style={stylesCustom.container}>
-            <AntDesign.Button
-                name="close"
-                color="black"
-                backgroundColor="#FFFA"
-                style={stylesCustom.buttonGoBack}
-                onPress={_ => {
-                    Alert.alert(
-                        "Você deseja cancelar a operação?",
-                        "",
-                        [
-                          {
-                            text: "Cancelar",
-                            onPress: () => console.log("Operação foi cancelada"),
-                            style: "cancel"
-                          },
-                          { text: "Sim", onPress: () => navigation.navigate("Home") }
-                        ]
-                      );
-                }}
-            />
+        <>
+            <Top/>
+            <View style={stylesCustom.container}>
+                <AntDesign.Button
+                    name="close"
+                    color="black"
+                    backgroundColor="#FFFA"
+                    style={stylesCustom.buttonGoBack}
+                    onPress={_ => {
+                        Alert.alert(
+                            "Você deseja cancelar a operação?",
+                            "",
+                            [
+                            {
+                                text: "Cancelar",
+                                onPress: () => console.log("Operação foi cancelada"),
+                                style: "cancel"
+                            },
+                            { text: "Sim", onPress: () => navigation.navigate("Home") }
+                            ]
+                        );
+                    }}
+                />
 
-            <Text>Título do produto</Text>
-            <TextInput
-                style={stylesCustom.input}
-                placeholder={(valueInputNome !== '')? valueInputNome : "Meu Produto"}
-                placeholderTextColor="#000"
-                onChangeText={value => {value !== ''? setValueInputNome(value) : Alert.alert('Digite algo')}}
-            />
+                <Text>Título do produto</Text>
+                <TextInput
+                    style={stylesCustom.input}
+                    placeholder={(valueInputNome !== '')? valueInputNome : "Meu Produto"}
+                    placeholderTextColor="#000"
+                    onChangeText={value => {value !== ''? setValueInputNome(value) : Alert.alert('Digite algo')}}
+                />
 
-            <Text>Valor</Text>
-            <TextInput
-                style={stylesCustom.input}
-                placeholder={(valueInputPreco !== 0)? String(valueInputPreco) : "R$ 99, 99"}
-                placeholderTextColor="#000"
-                onChangeText={value => {value !== ''? setValueInputPreco(Number(value)) : Alert.alert('Digite algo')}}
-            />
-            <Button
-                value={"Salvar"}
-                onPress={handleSave}
-            />
-        </View>
+                <Text>Valor</Text>
+                <TextInput
+                    style={stylesCustom.input}
+                    placeholder={(valueInputPreco !== 0)? String(valueInputPreco) : "R$ 99, 99"}
+                    placeholderTextColor="#000"
+                    onChangeText={value => {value !== ''? setValueInputPreco(Number(value)) : Alert.alert('Digite algo')}}
+                />
+                <Button
+                    value={"Salvar"}
+                    onPress={handleSave}
+                />
+            </View>
+        </>
     );
 }
 
@@ -95,7 +99,7 @@ const stylesCustom = StyleSheet.create(
     {
         container: {
             flex: 1,
-            backgroundColor: '#FFFA',
+            backgroundColor: '#EEEEEE',
             paddingVertical: 70,
             paddingHorizontal: 30
         },

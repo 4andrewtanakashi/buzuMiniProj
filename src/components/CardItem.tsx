@@ -44,19 +44,22 @@ export function CardItem ({title, value, item,...rest} : ButtonProps) : JSX.Elem
     return(
         <View style={styleButton.containerButton}>
             <TouchableOpacity 
-                style={styleButton.button}
+                style={[styleButton.button, styleButton.boxShadow]}
                 activeOpacity={1}
                 {...rest}
                 >
                 {/* <Image style={styleButton.imgAdjust} source={require('../img/plus.png')} /> */}
+                <FontAwesome style={styleButton.picture}
+                    name={'picture-o'} color="#000" size={70} />
                 <View style={styleButton.itemsText}>
                     <Text style={styleButton.titileFont}>{title}</Text>
                     <Text>R$ {value}</Text>
+                    <Text style={styleButton.fontCategoria}>Categoria</Text>
                 </View>
                 <View style={styleButton.iconsAdjust}>
                     <FontAwesome.Button backgroundColor="#FFFF" 
                         name={'trash-o'} onPress={() => handleDelete(title, item.id)}
-                        size={25} color="#F04" />
+                        size={25} color="#DA0D1E" />
                     <MaterialCommunityIcons.Button backgroundColor="#FFFF" 
                         name="pencil" onPress={() => navigation.navigate("ItemForm", {item})}
                         size={25} color="#000"/>
@@ -69,16 +72,20 @@ export function CardItem ({title, value, item,...rest} : ButtonProps) : JSX.Elem
 const styleButton = StyleSheet.create({
     button: {
         backgroundColor: '#FFFF',
-        fontSize: 20,
-        padding:15,
-        borderRadius: 20,
+        // padding:20,
+        borderRadius: 10,
         marginTop: 15,
         width:'100%',
-        height: 150,
-        shadowColor: '#001',
-        shadowOpacity: 0.6,
+        height: 190,
         marginBottom: 10,
-        flexDirection: "column",
+        flexDirection: "row",
+    },
+    boxShadow: {
+        shadowColor: '#000',
+        shadowOffset: {width: 0, height: 4},
+        shadowOpacity: 1,
+        shadowRadius: 4,
+        elevation: 5
     },
     titileFont: {
         color: '#000A',
@@ -86,16 +93,30 @@ const styleButton = StyleSheet.create({
         fontWeight: 'bold',
     },
     containerButton: {
-        justifyContent: 'flex-end'
+        // justifyContent: 'flex-end',
     },
     iconsAdjust: {
+        // flex: 3,
         flexDirection: "row",
         justifyContent: 'flex-end',
-        paddingTop: '10%',
-        paddingHorizontal: 1,
+        paddingTop: '40%',
+        paddingHorizontal: 2,
     },
     itemsText: {
-        alignItems: 'center',
+        justifyContent: 'flex-start',
+        flex: 1,
+        paddingTop: '5%',
+    },
+    picture: {
+        // flex: 1,
+        flexDirection:'column',
         justifyContent: 'center',
+        padding: 20,
+        paddingTop: 50,
+        alignItems: 'center',
+    },
+    fontCategoria: {
+        fontWeight: 'bold',
+        fontSize: 18
     }
 });

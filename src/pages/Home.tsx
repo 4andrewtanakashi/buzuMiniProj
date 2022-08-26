@@ -4,7 +4,7 @@ import {
     Text,
     StyleSheet,
     FlatList, //Muitos elementos
-    Alert,
+    Image,
 } from 'react-native';
 import { useNavigation } from "@react-navigation/native";
 //import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
@@ -13,6 +13,7 @@ import {Button} from '../components/Button';
 import {CardItem} from '../components/CardItem';
 import {DataItem, RootStackParams} from '../utils/Utils';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { Top } from '../interface/Top';
 
 export function Home () : JSX.Element {
     const navigation = useNavigation<NativeStackNavigationProp<RootStackParams>>();
@@ -49,51 +50,54 @@ export function Home () : JSX.Element {
     [valueList]); // Toda vez que atualizar o valueInput o useEffect é chamado
 
     return(
-        <View style={stylesCustom.container}>
-            
-            <Button 
-                value={"Cadastrar"} 
-                onPress={_ => {
-                    console.log("OnClick Here?");
-                    navigation.navigate("ItemForm")}}
-            />
+        <>
+            <Top/>
+            <View style={stylesCustom.container}>
+                
+                <Button 
+                    value={"Cadastrar"} 
+                    onPress={_ => {
+                        console.log("OnClick Here?");
+                        navigation.navigate("ItemForm")}}
+                />
 
-            {/* <MaterialIcons.Button backgroundColor="#FFFF" 
-                name={'cleaning-services'} onPress={
-                    () => Alert.alert(
-                        "Você deseja realiza a limpeza?",
-                            "",
-                        [
-                          {
-                            text: "Cancelar",
-                            onPress: () => console.log("Operação de limpeza cancelada"),
-                            style: "cancel"
-                          },
-                          { text: "Sim", onPress: () => clearAll() }
-                        ]
-                      ) 
-                }
-                size={40} color="#F00"
-            /> */}
+                {/* <MaterialIcons.Button backgroundColor="#FFFF" 
+                    name={'cleaning-services'} onPress={
+                        () => Alert.alert(
+                            "Você deseja realiza a limpeza?",
+                                "",
+                            [
+                                {
+                                text: "Cancelar",
+                                onPress: () => console.log("Operação de limpeza cancelada"),
+                                style: "cancel"
+                                },
+                                { text: "Sim", onPress: () => clearAll() }
+                            ]
+                            ) 
+                    }
+                    size={40} color="#F00"
+                /> */}
 
-            {messageItem}
+                {messageItem}
 
-            <FlatList
-                data={valueList}
-                keyExtractor={ (item : any)  => item.id  }
-                renderItem={({item}) => (
-                    <CardItem
-                        title={item.nome}
-                        value={item.preco}
-                        item={item}
-                        //onPress={() => handleDelete(item)}
-                    />
-                ) }
-            />
+                <FlatList
+                    data={valueList}
+                    keyExtractor={ (item : any)  => item.id  }
+                    renderItem={({item}) => (
+                        <CardItem
+                            title={item.nome}
+                            value={item.preco}
+                            item={item}
+                            //onPress={() => handleDelete(item)}
+                        />
+                    ) }
+                />
 
 
-            
-        </View>
+
+            </View>
+        </>
     );
 }
 
@@ -101,8 +105,7 @@ const stylesCustom = StyleSheet.create(
     {
         container: {
             flex: 1,
-            backgroundColor: '#ECEAEA',
-            paddingVertical: 70,
+            backgroundColor: '#EEEEEE',
             paddingHorizontal: 30
         },
         title: {
@@ -110,8 +113,7 @@ const stylesCustom = StyleSheet.create(
             fontSize:24,
             fontWeight: 'bold',
             padding:15,
-            marginTop: 50
+            marginTop: 10
         },
-    
     }
 );

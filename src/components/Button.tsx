@@ -29,7 +29,7 @@ export function Button ({value, ...rest} : ButtonProps) : JSX.Element {
 
 const styleButton = StyleSheet.create({
     button: {
-        backgroundColor: '#F01',
+        backgroundColor: '#DA0D1E',
         fontSize: 20,
         padding:15,
         borderRadius: 20,
@@ -46,7 +46,7 @@ const styleButton = StyleSheet.create({
         fontWeight: 'bold'
     },
     containerButton: {
-        justifyContent: 'flex-end'
+        justifyContent: 'flex-end',
     },
     imgAdjust: {
         marginHorizontal: 5,
