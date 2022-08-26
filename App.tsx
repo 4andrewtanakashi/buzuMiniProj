@@ -6,17 +6,19 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 import {Home} from './src/pages/Home';
 import {ItemForm} from './src/pages/ItemForm';
+import { RootStackParams } from './src/utils/Utils';
 
-const Stack = createNativeStackNavigator();
+const Stack = createNativeStackNavigator<RootStackParams>();
 
 export default function App () {
   return (
        <>
+          <StatusBar barStyle="light-content" />
           <NavigationContainer>
-                <Stack.Navigator>
-                    {/* <StatusBar barStyle="light-content" /> */}
+                <Stack.Navigator initialRouteName="Home" 
+                  screenOptions={{ headerShown: false }}>
                     <Stack.Screen name="Home" component={Home}/>
-                    <Stack.Screen name="FormEdit" component={ItemForm}/>
+                    <Stack.Screen name="ItemForm" component={ItemForm}/>
                 </Stack.Navigator>
           </NavigationContainer>
        </>

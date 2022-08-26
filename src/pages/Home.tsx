@@ -7,16 +7,19 @@ import {
     Alert,
 } from 'react-native';
 import { useNavigation } from "@react-navigation/native";
-import {getMultiple} from '../service/Crud';
+//import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import {getMultiple, clearAll} from '../service/Crud';
 import {Button} from '../components/Button';
 import {CardItem} from '../components/CardItem';
-import {DataItem, DataItemConst} from '../utils/Utils';
+import {DataItem, RootStackParams} from '../utils/Utils';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
-export function Home () {
-    const navigation = useNavigation();
+export function Home () : JSX.Element {
+    const navigation = useNavigation<NativeStackNavigationProp<RootStackParams>>();
+
     const [valueList, setValueList] = useState<DataItem[]>([]);
     const [messageItem, setMessageItem] = useState(
-        <Text style={[stylesCustom.title]}> List Items: </Text>
+        <Text style={[stylesCustom.title]}> </Text>
     );
 
     useEffect(
@@ -33,14 +36,14 @@ export function Home () {
                         });
                         setValueList(tempList);
                     }
-
+                    if (tempList.length > 0)
+                       setMessageItem(<Text style={[stylesCustom.title]}> Lista de Itens: </Text>);
                 }
+            ).catch(
+                () => setMessageItem(<Text style={[stylesCustom.title]}> Não há items </Text>)
             );
-
             if (valueList.length <= 0)
                 setMessageItem(<Text style={[stylesCustom.title]}> Não há items </Text>);
-            else
-                setMessageItem(<Text style={[stylesCustom.title]}> Lista de Itens: </Text>);
 
         },
     [valueList]); // Toda vez que atualizar o valueInput o useEffect é chamado
@@ -50,8 +53,28 @@ export function Home () {
             
             <Button 
                 value={"Cadastrar"} 
-                onPress={_ => navigation.navigate("FormEdit" as never)}
+                onPress={_ => {
+                    console.log("OnClick Here?");
+                    navigation.navigate("ItemForm")}}
             />
+
+            {/* <MaterialIcons.Button backgroundColor="#FFFF" 
+                name={'cleaning-services'} onPress={
+                    () => Alert.alert(
+                        "Você deseja realiza a limpeza?",
+                            "",
+                        [
+                          {
+                            text: "Cancelar",
+                            onPress: () => console.log("Operação de limpeza cancelada"),
+                            style: "cancel"
+                          },
+                          { text: "Sim", onPress: () => clearAll() }
+                        ]
+                      ) 
+                }
+                size={40} color="#F00"
+            /> */}
 
             {messageItem}
 
@@ -62,6 +85,7 @@ export function Home () {
                     <CardItem
                         title={item.nome}
                         value={item.preco}
+                        item={item}
                         //onPress={() => handleDelete(item)}
                     />
                 ) }
@@ -77,7 +101,7 @@ const stylesCustom = StyleSheet.create(
     {
         container: {
             flex: 1,
-            backgroundColor: '#FFFA',
+            backgroundColor: '#ECEAEA',
             paddingVertical: 70,
             paddingHorizontal: 30
         },

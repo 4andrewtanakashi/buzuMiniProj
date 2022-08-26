@@ -4,24 +4,38 @@ import {
     Text,
     StyleSheet,
     TextInput,
-    FlatList, //Muitos elementos
     Alert,
 } from 'react-native';
 
-import { useNavigation } from "@react-navigation/native";
 import AntDesign from 'react-native-vector-icons/AntDesign';
+import { useNavigation } from '@react-navigation/native';
 
 import { Button } from '../components/Button';
 import {saveData} from '../service/Crud';
+import { NativeStackNavigationProp, NativeStackScreenProps } from '@react-navigation/native-stack';
+import { RootStackParams } from '../utils/Utils';
 
-export function ItemForm() {
-    const navigation = useNavigation();
+type Props = NativeStackScreenProps<RootStackParams, "ItemForm">;
 
-    //Valores dos campos
+export function ItemForm ( {route} : Props) : JSX.Element  {
+    const navigation = useNavigation<NativeStackNavigationProp<RootStackParams>>();
+
+    //Valores dos campos a serem salvos
     const [valueInputNome, setValueInputNome] = useState('');
     const [valueInputPreco, setValueInputPreco] = useState(0);
 
-    function handleSave() {
+    useEffect(
+        () => {
+            if (route !== undefined) {
+                console.log("route.params: ", route.params);
+                console.log("route.params.item: ", route.params.item);
+                setValueInputNome(route.params.item.nome);
+            } if (route !== undefined)
+                setValueInputPreco(route.params.item.preco);
+        }
+    );
+
+    function handleSave() : void {
         const data = {
             id: String(new Date().getTime()),
             nome: valueInputNome,
@@ -38,13 +52,26 @@ export function ItemForm() {
                 color="black"
                 backgroundColor="#FFFA"
                 style={stylesCustom.buttonGoBack}
-                onPress={_ => navigation.navigate("Home" as never)}
+                onPress={_ => {
+                    Alert.alert(
+                        "Você deseja cancelar a operação?",
+                        "",
+                        [
+                          {
+                            text: "Cancelar",
+                            onPress: () => console.log("Operação foi cancelada"),
+                            style: "cancel"
+                          },
+                          { text: "Sim", onPress: () => navigation.navigate("Home") }
+                        ]
+                      );
+                }}
             />
 
             <Text>Título do produto</Text>
             <TextInput
                 style={stylesCustom.input}
-                placeholder="Meu Produto"
+                placeholder={(valueInputNome !== '')? valueInputNome : "Meu Produto"}
                 placeholderTextColor="#000"
                 onChangeText={value => {value !== ''? setValueInputNome(value) : Alert.alert('Digite algo')}}
             />
@@ -52,7 +79,7 @@ export function ItemForm() {
             <Text>Valor</Text>
             <TextInput
                 style={stylesCustom.input}
-                placeholder="R$ 99, 99"
+                placeholder={(valueInputPreco !== 0)? String(valueInputPreco) : "R$ 99, 99"}
                 placeholderTextColor="#000"
                 onChangeText={value => {value !== ''? setValueInputPreco(Number(value)) : Alert.alert('Digite algo')}}
             />

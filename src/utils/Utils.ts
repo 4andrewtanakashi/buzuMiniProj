@@ -4,10 +4,17 @@ export interface DataItem {
     preco: number;
 }
 
-export function DataItemConst (data : string) {
+export function dataItemNew (): DataItem  {
     return {
-        id: data.id,
-        nome: data.nome,
-        preco: data.preco
+        id: '',
+        nome: '',
+        preco: 0
     };
 }
+
+export type RootStackParams = {
+    Home: any;
+    ItemForm: {
+        item: DataItem;
+    };
+  };
