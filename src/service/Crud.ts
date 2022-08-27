@@ -7,7 +7,6 @@ export async function saveData  (data : DataItem) : Promise<void> {
     try {
         const jsonValue = JSON.stringify(data)
         await AsyncStorage.setItem(data.id, jsonValue);
-        Alert.alert("Salvo");
     } catch (e : any) {
         console.log("Erro: ", e);
     }
@@ -34,7 +33,7 @@ export async function getMultiple () : Promise<readonly KeyValuePair[]> {
     } catch (e : any) {
         console.log("Erro: ", e);
     }
-    console.log("getMultiple:", values);
+    //console.log("getMultiple:", values);
     return values;
 }
 
@@ -47,7 +46,7 @@ export async function getMyObject (id: string) : Promise<DataItem> {
         console.log("Erro: ", e);
     }
 
-    console.log("getMultiple:", value);
+    console.log("getMyObject:", value);
     return value;
 }
 

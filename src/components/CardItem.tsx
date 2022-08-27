@@ -5,16 +5,18 @@ import {
     Text,
     StyleSheet,
     View,
-    Alert
+    Alert,
+    DevSettings
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 // import EvilIcons from 'react-native-vector-icons/EvilIcons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 
-import {removeItem} from '../service/Crud';
 import { DataItem, RootStackParams } from '../utils/Utils';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+
+import {removeItem} from '../service/Crud';
 
 
 interface ButtonProps extends TouchableOpacityProps {
@@ -36,13 +38,16 @@ export function CardItem ({title, value, item,...rest} : ButtonProps) : JSX.Elem
                 onPress: () => console.log("Operação de remoção cancelada"),
                 style: "cancel"
               },
-              { text: "Sim", onPress: () => removeItem(id) }
+              { text: "Sim", onPress: () => {
+                    removeItem(id);
+                    DevSettings.reload();
+                } }
             ]
           );
     }
 
     return(
-        <View style={styleButton.containerButton}>
+        <View>
             <TouchableOpacity 
                 style={[styleButton.button, styleButton.boxShadow]}
                 activeOpacity={1}
@@ -54,7 +59,7 @@ export function CardItem ({title, value, item,...rest} : ButtonProps) : JSX.Elem
                 <View style={styleButton.itemsText}>
                     <Text style={styleButton.titileFont}>{title}</Text>
                     <Text>R$ {value}</Text>
-                    <Text style={styleButton.fontCategoria}>Categoria</Text>
+                    <Text style={styleButton.fontCategoria}>{item.categoria}</Text>
                 </View>
                 <View style={styleButton.iconsAdjust}>
                     <FontAwesome.Button backgroundColor="#FFFF" 
@@ -92,11 +97,7 @@ const styleButton = StyleSheet.create({
         fontSize: 20,
         fontWeight: 'bold',
     },
-    containerButton: {
-        // justifyContent: 'flex-end',
-    },
     iconsAdjust: {
-        // flex: 3,
         flexDirection: "row",
         justifyContent: 'flex-end',
         paddingTop: '40%',
@@ -108,7 +109,6 @@ const styleButton = StyleSheet.create({
         paddingTop: '5%',
     },
     picture: {
-        // flex: 1,
         flexDirection:'column',
         justifyContent: 'center',
         padding: 20,

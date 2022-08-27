@@ -12,33 +12,29 @@ import {getMultiple, clearAll} from '../service/Crud';
 import {Button} from '../components/Button';
 import {CardItem} from '../components/CardItem';
 import {DataItem, RootStackParams} from '../utils/Utils';
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { NativeStackNavigationProp, NativeStackScreenProps } from '@react-navigation/native-stack';
 import { Top } from '../interface/Top';
 
-export function Home () : JSX.Element {
+type Props = NativeStackScreenProps<RootStackParams, "Home">;
+
+export function Home ( {route} : Props) : JSX.Element  {
     const navigation = useNavigation<NativeStackNavigationProp<RootStackParams>>();
 
     const [valueList, setValueList] = useState<DataItem[]>([]);
-    const [messageItem, setMessageItem] = useState(
-        <Text style={[stylesCustom.title]}> </Text>
-    );
+    const [messageItem, setMessageItem] = useState(<></>);
 
     useEffect(
         () => {
-
+            console.log("Home->route.params: ", route.params);
             let tempList : DataItem[] = [];
             getMultiple().then(
                 listValues => {
                     listValues.map(elem => tempList.push(JSON.parse(elem[1] || '')));
                     if (tempList.length > 0) {
-                        tempList.map( elemTemp => {
-                            console.log("elemTemp: ", elemTemp, typeof(elemTemp));
-                            console.log("elemTemp.id: ", elemTemp.id);
-                        });
                         setValueList(tempList);
+                        setMessageItem(<></>);
                     }
-                    if (tempList.length > 0)
-                       setMessageItem(<Text style={[stylesCustom.title]}> Lista de Itens: </Text>);
+                       
                 }
             ).catch(
                 () => setMessageItem(<Text style={[stylesCustom.title]}> Não há items </Text>)
@@ -47,7 +43,7 @@ export function Home () : JSX.Element {
                 setMessageItem(<Text style={[stylesCustom.title]}> Não há items </Text>);
 
         },
-    [valueList]); // Toda vez que atualizar o valueInput o useEffect é chamado
+    [valueList, route]); // Toda vez que atualizar o valueInput o useEffect é chamado
 
     return(
         <>
@@ -56,9 +52,7 @@ export function Home () : JSX.Element {
                 
                 <Button 
                     value={"Cadastrar"} 
-                    onPress={_ => {
-                        console.log("OnClick Here?");
-                        navigation.navigate("ItemForm")}}
+                    onPress={_ => navigation.navigate("ItemForm", {item: undefined})}
                 />
 
                 {/* <MaterialIcons.Button backgroundColor="#FFFF" 
@@ -89,7 +83,6 @@ export function Home () : JSX.Element {
                             title={item.nome}
                             value={item.preco}
                             item={item}
-                            //onPress={() => handleDelete(item)}
                         />
                     ) }
                 />

@@ -22,12 +22,11 @@ const stylesCustom = StyleSheet.create(
     {
         imgBuzuAdjust: {
             flex: 1,
-            width: "25%",
-            height: "10%",
+            width: 80,
         },
         topScreen: {
             backgroundColor: "#DA0D1E",
-            height: "7.5%"
+            height: 50
         },
         fontTitle: {
             backgroundColor: '#EEEEEE',
