@@ -9,44 +9,25 @@ import {
     DevSettings
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-// import EvilIcons from 'react-native-vector-icons/EvilIcons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 
 import { DataItem, RootStackParams } from '../utils/Utils';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-
-import {removeItem} from '../service/Crud';
-import { TagsCards } from './TagsCards';
 import Tags from 'react-native-tags';
+import AntDesign from 'react-native-vector-icons/AntDesign';
 
 
 interface ButtonProps extends TouchableOpacityProps {
     title: string;
     value: number;
     item: DataItem;
+    funcDel: () => void;
 }
 
-export function CardItem ({title, value, item,...rest} : ButtonProps) : JSX.Element  {
+export function CardItem ({title, value, item, funcDel,...rest} : ButtonProps) : JSX.Element  {
     const navigation = useNavigation<NativeStackNavigationProp<RootStackParams>>();
 
-    function handleDelete (nomeItem : string, id : string) : void {
-        Alert.alert(
-            "Você deseja remove esse item?",
-            nomeItem,
-            [
-              {
-                text: "Cancelar",
-                onPress: () => console.log("Operação de remoção cancelada"),
-                style: "cancel"
-              },
-              { text: "Sim", onPress: () => {
-                    removeItem(id);
-                    DevSettings.reload();
-                } }
-            ]
-          );
-    }
 
     return(
         <View>
@@ -62,8 +43,14 @@ export function CardItem ({title, value, item,...rest} : ButtonProps) : JSX.Elem
                     <Text style={styleButton.priceFont}>R$ {value}</Text>
                     <Text style={styleButton.fontCategoria}>{item.categoria}</Text>
                     <Tags initialTags={item.tags}
-                        renderTag={({ tag, onPress }) => (
-                            <TagsCards tag={tag} onPress={onPress} />
+                        renderTag={({ tag, index, onPress }) => (
+                            <TouchableOpacity 
+                                key={`${tag}-${index}`} onPress={onPress}
+                                style={ styleButton.buttonTag }
+                                >
+                                <Text style={{color: '#000A'}}>{tag}{' '}
+                                <AntDesign name="close" color="black" size={13}/></Text>
+                            </TouchableOpacity>
                         )}
                         deleteTagOnPress={false}
                         inputStyle={{backgroundColor: '#FFFF'}}
@@ -71,7 +58,7 @@ export function CardItem ({title, value, item,...rest} : ButtonProps) : JSX.Elem
                 </View>
                 <View style={styleButton.iconsAdjust}>
                     <FontAwesome.Button backgroundColor="#FFFF" 
-                        name={'trash-o'} onPress={() => handleDelete(title, item.id)}
+                        name={'trash-o'} onPress={funcDel}
                         size={25} color="#DA0D1E" />
                     <MaterialCommunityIcons.Button backgroundColor="#FFFF" 
                         name="pencil" onPress={() => navigation.navigate("ItemForm", {item})}
@@ -131,5 +118,11 @@ const styleButton = StyleSheet.create({
         fontWeight: 'bold',
         fontSize: 15,
         color: '#000'
+    },
+    buttonTag: {
+        borderWidth: 1,
+        borderColor: '#000A', 
+        borderRadius: 7, 
+        marginRight: 4
     }
 });

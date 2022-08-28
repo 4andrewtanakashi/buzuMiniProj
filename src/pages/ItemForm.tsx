@@ -19,7 +19,6 @@ import { DataItem, RootStackParams } from '../utils/Utils';
 import { Top } from '../interface/Top';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Tags from 'react-native-tags';
-import { TagsCards } from '../components/TagsCards';
 
 type Props = NativeStackScreenProps<RootStackParams, "ItemForm">;
 
@@ -155,8 +154,14 @@ export function ItemForm ( {route} : Props) : JSX.Element  {
                     }}
                     initialTags={(placeholderTags.length !== 0)? placeholderTags : []}
                     onChangeTags={handleOnTagPress}
-                    renderTag={({ tag, onPress }) => (
-                        <TagsCards tag={tag} onPress={onPress} />
+                    renderTag={({ tag, index, onPress }) => (
+                        <TouchableOpacity 
+                            key={`${tag}-${index}`} onPress={onPress}
+                            style={ stylesCustom.buttonTag }
+                            >
+                            <Text style={{color: '#000A'}}>{tag}{' '}
+                            <AntDesign name="close" color="black" size={13}/></Text>
+                        </TouchableOpacity>
                     )}
                     containerStyle={stylesCustom.inputContainerTag}
                     inputStyle={stylesCustom.inputInnerTag}
@@ -215,8 +220,13 @@ const stylesCustom = StyleSheet.create(
             flexDirection: 'row',
             
         },
+        buttonTag: {
+            borderWidth: 1,
+            borderColor: '#000A', 
+            borderRadius: 7, 
+            marginRight: 4
+        },
         buttonGoBack: {
-            // width: 580,
             flexDirection: 'row',
             alignItems: 'flex-end',
             justifyContent: 'flex-end',

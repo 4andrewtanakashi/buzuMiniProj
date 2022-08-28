@@ -5,15 +5,18 @@ import {
     StyleSheet,
     FlatList, //Muitos elementos
     Image,
+    Alert,
+    DevSettings,
 } from 'react-native';
 import { useNavigation } from "@react-navigation/native";
 import AntDesign from 'react-native-vector-icons/AntDesign';
-import {getMultiple, clearAll} from '../service/Crud';
+import {getMultiple, clearAll, removeItem} from '../service/Crud';
 import {Button} from '../components/Button';
 import {CardItem} from '../components/CardItem';
 import {DataItem, RootStackParams} from '../utils/Utils';
 import { NativeStackNavigationProp, NativeStackScreenProps } from '@react-navigation/native-stack';
 import { Top } from '../interface/Top';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
 
 type Props = NativeStackScreenProps<RootStackParams, "Home">;
 
@@ -48,6 +51,25 @@ export function Home ( {route} : Props) : JSX.Element  {
 
         },
     [valueList, route]); // Toda vez que atualizar o valueInput o useEffect é chamado
+
+    function handleDelete (nomeItem : string, id : string) : void {
+        Alert.alert(
+            "Você deseja remove esse item?",
+            nomeItem,
+            [
+              {
+                text: "Cancelar",
+                onPress: () => console.log("Operação de remoção cancelada"),
+                style: "cancel"
+              },
+              { text: "Sim", onPress: () => {
+                    removeItem(id);
+                    DevSettings.reload();
+                } }
+            ]
+          );
+    }
+
 
     return(
         <>
@@ -87,6 +109,7 @@ export function Home ( {route} : Props) : JSX.Element  {
                             title={item.nome}
                             value={item.preco}
                             item={item}
+                            funcDel={() => handleDelete(item.nome, item.id)}
                         />
                     ) }
                 />
