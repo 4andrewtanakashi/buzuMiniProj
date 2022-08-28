@@ -19,12 +19,12 @@
 | Navigator        |
 
 ## Roteiro Básico:
-- [ ] CRUD
+- [X] CRUD
 - [X] Usar Route Navigation
 - [X] Usar Storage
 
 ## Roteiro Extra:
-- [ ] Fidelidade do design da interface
+- [X] Fidelidade do design da interface
 - [ ] Teste dos componentes
 - [ ] Context API
 
