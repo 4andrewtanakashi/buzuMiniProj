@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
     TouchableOpacity,
     TouchableOpacityProps,
@@ -17,6 +17,8 @@ import { DataItem, RootStackParams } from '../utils/Utils';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 import {removeItem} from '../service/Crud';
+import { TagsCards } from './TagsCards';
+import Tags from 'react-native-tags';
 
 
 interface ButtonProps extends TouchableOpacityProps {
@@ -53,13 +55,19 @@ export function CardItem ({title, value, item,...rest} : ButtonProps) : JSX.Elem
                 activeOpacity={1}
                 {...rest}
                 >
-                {/* <Image style={styleButton.imgAdjust} source={require('../img/plus.png')} /> */}
                 <FontAwesome style={styleButton.picture}
                     name={'picture-o'} color="#000" size={70} />
                 <View style={styleButton.itemsText}>
                     <Text style={styleButton.titileFont}>{title}</Text>
-                    <Text>R$ {value}</Text>
+                    <Text style={styleButton.priceFont}>R$ {value}</Text>
                     <Text style={styleButton.fontCategoria}>{item.categoria}</Text>
+                    <Tags initialTags={item.tags}
+                        renderTag={({ tag, onPress }) => (
+                            <TagsCards tag={tag} onPress={onPress} />
+                        )}
+                        deleteTagOnPress={false}
+                        inputStyle={{backgroundColor: '#FFFF'}}
+                    />
                 </View>
                 <View style={styleButton.iconsAdjust}>
                     <FontAwesome.Button backgroundColor="#FFFF" 
@@ -92,6 +100,10 @@ const styleButton = StyleSheet.create({
         shadowRadius: 4,
         elevation: 5
     },
+    priceFont: {
+        color: '#000A',
+        fontSize: 15,
+    },
     titileFont: {
         color: '#000A',
         fontSize: 20,
@@ -117,6 +129,7 @@ const styleButton = StyleSheet.create({
     },
     fontCategoria: {
         fontWeight: 'bold',
-        fontSize: 18
+        fontSize: 15,
+        color: '#000'
     }
 });

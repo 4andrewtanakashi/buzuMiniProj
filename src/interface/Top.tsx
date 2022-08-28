@@ -34,7 +34,8 @@ const stylesCustom = StyleSheet.create(
             paddingBottom: 20,
             paddingHorizontal: 30,
             fontWeight: 'bold',
-            fontSize: 18
+            fontSize: 18,
+            color: "#000"
         }
     }
 );

@@ -7,7 +7,7 @@ import {
     Image,
 } from 'react-native';
 import { useNavigation } from "@react-navigation/native";
-//import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import AntDesign from 'react-native-vector-icons/AntDesign';
 import {getMultiple, clearAll} from '../service/Crud';
 import {Button} from '../components/Button';
 import {CardItem} from '../components/CardItem';
@@ -25,7 +25,7 @@ export function Home ( {route} : Props) : JSX.Element  {
 
     useEffect(
         () => {
-            console.log("Home->route.params: ", route.params);
+            // console.log("Home->route.params: ", route.params);
             let tempList : DataItem[] = [];
             getMultiple().then(
                 listValues => {
@@ -37,10 +37,14 @@ export function Home ( {route} : Props) : JSX.Element  {
                        
                 }
             ).catch(
-                () => setMessageItem(<Text style={[stylesCustom.title]}> Não há items </Text>)
+                () => setMessageItem(<Text style={[stylesCustom.title]}>
+                    <AntDesign name={'warning'} color="#991" size={30}/>{' '}
+                    Não há items </Text>)
             );
             if (valueList.length <= 0)
-                setMessageItem(<Text style={[stylesCustom.title]}> Não há items </Text>);
+                setMessageItem(<Text style={[stylesCustom.title]}> 
+                    <AntDesign name={'warning'} color="#991" size={30}/>{' '}
+                    Não há items </Text>);
 
         },
     [valueList, route]); // Toda vez que atualizar o valueInput o useEffect é chamado
