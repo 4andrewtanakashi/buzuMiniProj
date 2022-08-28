@@ -1,7 +1,7 @@
 export interface DataItem {
     id: string;
     nome: string;
-    preco: number;
+    preco: string;
     categoria: string;
     tags: string[];
 }
@@ -10,7 +10,7 @@ export function dataItemNew (): DataItem  {
     return {
         id: '',
         nome: '',
-        preco: 0,
+        preco: '',
         categoria: '',
         tags: []
     };

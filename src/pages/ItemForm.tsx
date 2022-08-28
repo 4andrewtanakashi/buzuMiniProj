@@ -14,7 +14,7 @@ import { NativeStackNavigationProp, NativeStackScreenProps } from '@react-naviga
 import SelectDropdownProps from 'react-native-select-dropdown'
 
 import { Button } from '../components/Button';
-import {saveData} from '../service/Crud';
+import {saveData, setItemData} from '../service/Crud';
 import { DataItem, RootStackParams } from '../utils/Utils';
 import { Top } from '../interface/Top';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
@@ -29,38 +29,53 @@ export function ItemForm ( {route} : Props) : JSX.Element  {
 
     //Valores dos campos a serem salvos
     const [valueInputNome, setValueInputNome] = useState('');
-    const [valueInputPreco, setValueInputPreco] = useState(0);
+    const [valueInputPreco, setValueInputPreco] = useState('');
     const [optionCategoria, setOptionCategoria] = useState('');
     const [valuesTags, setValuesTags] = useState<string[]>([]);
 
     //Placeholder values
     const [placeholderNome, setPlaceholderNome] = useState('');
-    const [placeholderPreco, setPlaceholderPreco] = useState(0);
-    const [placeholderTags, setPlaceholderTags] = useState<string[]>([]);
+    const [placeholderPreco, setPlaceholderPreco] = useState('');
+    
+    const [activeUpdateOnchange, setActiveUpdateOnchange] = useState(true);
 
     useEffect(
         () => {
-            if (route.params.item !== undefined) {
-                console.log("route.params: ", route.params);
-                console.log("route.params.item: ", route.params.item);
+            if ((route.params.item !== undefined) && 
+                (route.params.item?.nome !== valueInputNome) && (activeUpdateOnchange)) {
+                console.log("Testes");
                 setPlaceholderNome(route.params.item?.nome || '');
-                setPlaceholderPreco(route.params.item?.preco || 0);
+                setPlaceholderPreco(route.params.item?.preco || '');
                 setOptionCategoria(route.params.item?.categoria || '');
-                setPlaceholderTags(route.params.item?.tags || []);
-            }   
+
+                setValueInputNome(route.params.item?.nome || '');
+                setValueInputPreco(route.params.item?.preco || '');
+                setValuesTags(route.params.item?.tags || []);
+
+                setActiveUpdateOnchange(false);
+            }
+            
         }
-    , [valueInputNome, valueInputPreco, placeholderTags]);
+    );
 
     function handleSave() : void {
+
+        console.log("valueInputNome: ", valueInputNome);
         const data : DataItem = {
-            id: String(new Date().getTime()),
+            id: route.params.item?.id || String(new Date().getTime()),
             nome: valueInputNome,
             preco: valueInputPreco,
             categoria: optionCategoria,
             tags: valuesTags
         };
+        
+        if (route.params.item?.id !== undefined) {
+            console.log("Editou");
+            setItemData(data);
+        } else   
+            saveData(data);
         console.log("save: ", data);
-        saveData(data);
+        setActiveUpdateOnchange(true);
         Alert.alert("Salvo", 
             "",
             [{
@@ -70,20 +85,37 @@ export function ItemForm ( {route} : Props) : JSX.Element  {
     }
 
     function handleOnTagPress (tags : string[]) : void {
-        console.log("tags.length: ", tags.length);
-        let ultimateTag : string = tags[tags.length-1];
-        let tempCount : number = 0;
-        tags.forEach(elem => {tempCount+=elem.length});
-        if ((tempCount < MAX_LENGTH) && ((ultimateTag.length+tempCount) > MAX_LENGTH)) {
-            Alert.alert("Essa tag ultrapassa o limite (18).");
-            tags.pop();
-        } else if (tempCount === MAX_LENGTH){
-            Alert.alert("Limite atingido (18), exclua uma tag.");
-            tags.pop();
-        } else if (tempCount < MAX_LENGTH) {
-            setValuesTags(tags);
+
+        if (tags.length > 0) {
+            let ultimateTag : string = tags[tags.length-1];
+            let tempCount : number = 0;
+            tags.forEach(elem => {tempCount+=elem.length});
+            if ((tempCount < MAX_LENGTH) && ((ultimateTag.length+tempCount) > MAX_LENGTH)) {
+                Alert.alert("Essa tag ultrapassa o limite (18).");
+                tags.pop();
+            } else if (tempCount === MAX_LENGTH){
+                Alert.alert("Limite atingido (18), exclua uma tag.");
+                tags.pop();
+            } else if (tempCount < MAX_LENGTH) {
+                setValuesTags(tags);
+            }
         }
     }
+
+    function handleOnchangeNumber (value : string) : void {
+        let regex : RegExp = new RegExp(/[0-9]+(,[0-9]*)?/g);
+        if (regex.test(value)){
+            setValueInputPreco(value);
+        } else {
+            Alert.alert("Não segue o padrão (111 ou 112,33)");
+        }  
+    }
+
+    function handleOnchangeNome (nome :  string) : void {
+        console.log("nome: ", nome);
+        setValueInputNome(nome);
+        console.log("valueInputNome: ", valueInputNome);
+    }    
 
     return (
         <>
@@ -140,29 +172,26 @@ export function ItemForm ( {route} : Props) : JSX.Element  {
                 <Text style={stylesCustom.title}>Valor</Text>
                 <TextInput
                     style={stylesCustom.input}
-                    placeholder={(placeholderPreco !== 0)? String(placeholderPreco) : "R$ 99, 99"}
+                    placeholder={(placeholderPreco !== '')? String(placeholderPreco) : "99,99"}
                     placeholderTextColor="#000"
-                    onChangeText={value => setValueInputPreco(Number(value))}
+                    onChangeText={handleOnchangeNumber}
                 />
 
-                {/* {console.log("placeholderTags: ", placeholderTags,"placeholderTags.length: ", placeholderTags.length)
-                } */}
                 <Text style={stylesCustom.title}>Tags</Text>
                 <Tags
-                    textInputProps={{
-                        placeholder: "Digite uma tag"
-                    }}
-                    initialTags={(placeholderTags.length !== 0)? placeholderTags : []}
-                    onChangeTags={handleOnTagPress}
+                    initialText="tag"
+                    initialTags={route.params.item?.tags || []}
+                    onChangeTags={setValuesTags}
                     renderTag={({ tag, index, onPress }) => (
                         <TouchableOpacity 
-                            key={`${tag}-${index}`} onPress={onPress}
-                            style={ stylesCustom.buttonTag }
+                                key={`${tag}-${index}`} onPress={onPress}
+                                style={ stylesCustom.buttonTag }
                             >
                             <Text style={{color: '#000A'}}>{tag}{' '}
                             <AntDesign name="close" color="black" size={13}/></Text>
                         </TouchableOpacity>
                     )}
+                    maxNumberOfTags={5}
                     containerStyle={stylesCustom.inputContainerTag}
                     inputStyle={stylesCustom.inputInnerTag}
                     inputContainerStyle={{ borderTopWidth: 0, color:'#000'}}

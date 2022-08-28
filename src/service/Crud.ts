@@ -17,7 +17,6 @@ export async function setItemData (data : DataItem) : Promise<void> {
     try {
       const jsonValue = JSON.stringify(data);
       await AsyncStorage.setItem(data.id, jsonValue);
-      Alert.alert("Salvo");
     } catch (e : any) {
         console.log("Erro: ", e);
     }
@@ -57,13 +56,4 @@ export async function removeItem (id: string) : Promise<void> {
         Alert.alert("Erro: ", e);
     }
     console.log('Elemento removido com sucesso')
-}
-
-export async function clearAll () : Promise<void> {
-    try {
-      await AsyncStorage.clear()
-    } catch(e : any) {
-        Alert.alert("Erro: ", e);
-    }
-    console.log('Limpeza realizada com sucesso')
 }

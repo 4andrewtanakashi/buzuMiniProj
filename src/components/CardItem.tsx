@@ -17,30 +17,25 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import Tags from 'react-native-tags';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 
-
 interface ButtonProps extends TouchableOpacityProps {
-    title: string;
-    value: number;
     item: DataItem;
-    funcDel: () => void;
+    onPress: () => void;
 }
 
-export function CardItem ({title, value, item, funcDel,...rest} : ButtonProps) : JSX.Element  {
+export function CardItem ({item, onPress} : ButtonProps) : JSX.Element  {
     const navigation = useNavigation<NativeStackNavigationProp<RootStackParams>>();
-
 
     return(
         <View>
             <TouchableOpacity 
                 style={[styleButton.button, styleButton.boxShadow]}
                 activeOpacity={1}
-                {...rest}
                 >
                 <FontAwesome style={styleButton.picture}
                     name={'picture-o'} color="#000" size={70} />
                 <View style={styleButton.itemsText}>
-                    <Text style={styleButton.titileFont}>{title}</Text>
-                    <Text style={styleButton.priceFont}>R$ {value}</Text>
+                    <Text style={styleButton.titileFont}>{item.nome}</Text>
+                    <Text style={styleButton.priceFont}>R$ {item.preco}</Text>
                     <Text style={styleButton.fontCategoria}>{item.categoria}</Text>
                     <Tags initialTags={item.tags}
                         renderTag={({ tag, index, onPress }) => (
@@ -52,13 +47,14 @@ export function CardItem ({title, value, item, funcDel,...rest} : ButtonProps) :
                                 <AntDesign name="close" color="black" size={13}/></Text>
                             </TouchableOpacity>
                         )}
+                        readonly={true}
                         deleteTagOnPress={false}
                         inputStyle={{backgroundColor: '#FFFF'}}
                     />
                 </View>
                 <View style={styleButton.iconsAdjust}>
                     <FontAwesome.Button backgroundColor="#FFFF" 
-                        name={'trash-o'} onPress={funcDel}
+                        name={'trash-o'} onPress={onPress}
                         size={25} color="#DA0D1E" />
                     <MaterialCommunityIcons.Button backgroundColor="#FFFF" 
                         name="pencil" onPress={() => navigation.navigate("ItemForm", {item})}
@@ -72,7 +68,6 @@ export function CardItem ({title, value, item, funcDel,...rest} : ButtonProps) :
 const styleButton = StyleSheet.create({
     button: {
         backgroundColor: '#FFFF',
-        // padding:20,
         borderRadius: 10,
         marginTop: 15,
         width:'100%',
