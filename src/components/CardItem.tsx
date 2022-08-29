@@ -1,12 +1,10 @@
-import React, { useEffect } from 'react';
+import React, { useContext } from 'react';
 import {
     TouchableOpacity,
     TouchableOpacityProps,
     Text,
     StyleSheet,
-    View,
-    Alert,
-    DevSettings
+    View
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -16,6 +14,7 @@ import { DataItem, RootStackParams } from '../utils/Utils';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import Tags from 'react-native-tags';
 import AntDesign from 'react-native-vector-icons/AntDesign';
+import { DataItemsContext } from '../contexts/DataItems';
 
 interface ButtonProps extends TouchableOpacityProps {
     item: DataItem;
@@ -24,6 +23,12 @@ interface ButtonProps extends TouchableOpacityProps {
 
 export function CardItem ({item, onPress} : ButtonProps) : JSX.Element  {
     const navigation = useNavigation<NativeStackNavigationProp<RootStackParams>>();
+    const {setState} = useContext(DataItemsContext);
+
+    function handleEdit () {
+        setState(item);
+        navigation.navigate("ItemForm", {item});
+    }
 
     return(
         <View>
@@ -57,7 +62,7 @@ export function CardItem ({item, onPress} : ButtonProps) : JSX.Element  {
                         name={'trash-o'} onPress={onPress}
                         size={25} color="#DA0D1E" />
                     <MaterialCommunityIcons.Button backgroundColor="#FFFF" 
-                        name="pencil" onPress={() => navigation.navigate("ItemForm", {item})}
+                        name="pencil" onPress={handleEdit}
                         size={25} color="#000"/>
                 </View>
             </ TouchableOpacity>

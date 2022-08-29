@@ -1,12 +1,10 @@
-import React, { useState, useEffect }  from 'react';
+import React, { useState, useEffect, useContext }  from 'react';
 import {
     View,
     Text,
     StyleSheet,
     FlatList, //Muitos elementos
-    Image,
     Alert,
-    DevSettings,
 } from 'react-native';
 import { useNavigation } from "@react-navigation/native";
 import AntDesign from 'react-native-vector-icons/AntDesign';
@@ -24,7 +22,6 @@ export function Home ( {route} : Props) : JSX.Element  {
 
     const [valueList, setValueList] = useState<DataItem[]>([]);
     const [messageItem, setMessageItem] = useState(<></>);
-    const [flatListObj, setFlatListObj] = useState(<></>);
 
     useEffect(
         () => {

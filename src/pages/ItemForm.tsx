@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import {
     View,
     Text,
@@ -7,22 +7,20 @@ import {
     Alert,
     TouchableOpacity,
 } from 'react-native';
-
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp, NativeStackScreenProps } from '@react-navigation/native-stack';
 import SelectDropdownProps from 'react-native-select-dropdown'
-
 import { Button } from '../components/Button';
 import {saveData, setItemData} from '../service/Crud';
-import { DataItem, RootStackParams } from '../utils/Utils';
-import { Top } from '../interface/Top';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Tags from 'react-native-tags';
 
-type Props = NativeStackScreenProps<RootStackParams, "ItemForm">;
+import { DataItem, RootStackParams } from '../utils/Utils';
+import { Top } from '../interface/Top';
+import { DataItemsContext } from '../contexts/DataItems';
 
-const MAX_LENGTH = 18;
+type Props = NativeStackScreenProps<RootStackParams, "ItemForm">;
 
 export function ItemForm ( {route} : Props) : JSX.Element  {
     const navigation = useNavigation<NativeStackNavigationProp<RootStackParams>>();
@@ -32,22 +30,16 @@ export function ItemForm ( {route} : Props) : JSX.Element  {
     const [valueInputPreco, setValueInputPreco] = useState('');
     const [optionCategoria, setOptionCategoria] = useState('');
     const [valuesTags, setValuesTags] = useState<string[]>([]);
-
-    //Placeholder values
-    const [placeholderNome, setPlaceholderNome] = useState('');
-    const [placeholderPreco, setPlaceholderPreco] = useState('');
     
     const [activeUpdateOnchange, setActiveUpdateOnchange] = useState(true);
+    const {state} = useContext(DataItemsContext);
 
     useEffect(
         () => {
             if ((route.params.item !== undefined) && 
                 (route.params.item?.nome !== valueInputNome) && (activeUpdateOnchange)) {
-                console.log("Testes");
-                setPlaceholderNome(route.params.item?.nome || '');
-                setPlaceholderPreco(route.params.item?.preco || '');
+               
                 setOptionCategoria(route.params.item?.categoria || '');
-
                 setValueInputNome(route.params.item?.nome || '');
                 setValueInputPreco(route.params.item?.preco || '');
                 setValuesTags(route.params.item?.tags || []);
@@ -59,8 +51,6 @@ export function ItemForm ( {route} : Props) : JSX.Element  {
     );
 
     function handleSave() : void {
-
-        console.log("valueInputNome: ", valueInputNome);
         const data : DataItem = {
             id: route.params.item?.id || String(new Date().getTime()),
             nome: valueInputNome,
@@ -70,7 +60,6 @@ export function ItemForm ( {route} : Props) : JSX.Element  {
         };
         
         if (route.params.item?.id !== undefined) {
-            console.log("Editou");
             setItemData(data);
         } else   
             saveData(data);
@@ -84,24 +73,6 @@ export function ItemForm ( {route} : Props) : JSX.Element  {
         );
     }
 
-    function handleOnTagPress (tags : string[]) : void {
-
-        if (tags.length > 0) {
-            let ultimateTag : string = tags[tags.length-1];
-            let tempCount : number = 0;
-            tags.forEach(elem => {tempCount+=elem.length});
-            if ((tempCount < MAX_LENGTH) && ((ultimateTag.length+tempCount) > MAX_LENGTH)) {
-                Alert.alert("Essa tag ultrapassa o limite (18).");
-                tags.pop();
-            } else if (tempCount === MAX_LENGTH){
-                Alert.alert("Limite atingido (18), exclua uma tag.");
-                tags.pop();
-            } else if (tempCount < MAX_LENGTH) {
-                setValuesTags(tags);
-            }
-        }
-    }
-
     function handleOnchangeNumber (value : string) : void {
         let regex : RegExp = new RegExp(/[0-9]+(,[0-9]*)?/g);
         if (regex.test(value)){
@@ -109,12 +80,6 @@ export function ItemForm ( {route} : Props) : JSX.Element  {
         } else {
             Alert.alert("Não segue o padrão (111 ou 112,33)");
         }  
-    }
-
-    function handleOnchangeNome (nome :  string) : void {
-        console.log("nome: ", nome);
-        setValueInputNome(nome);
-        console.log("valueInputNome: ", valueInputNome);
     }    
 
     return (
@@ -146,7 +111,8 @@ export function ItemForm ( {route} : Props) : JSX.Element  {
                 <Text style={stylesCustom.title}>Título do produto</Text>
                 <TextInput
                     style={stylesCustom.input}
-                    placeholder={(placeholderNome !== '')? placeholderNome : "Meu Produto"}
+                    placeholder={(state.nome !== '' && route.params.item !== undefined)?
+                         state.nome : "Meu Produto"}
                     placeholderTextColor="#000"
                     onChangeText={setValueInputNome}
                 />
@@ -155,7 +121,8 @@ export function ItemForm ( {route} : Props) : JSX.Element  {
                 <SelectDropdownProps
                     data={["Eletrônicos", "Livros", "Actions Figures", "Ferramentas", "Academia"]}
                     onSelect={ (selectedItem) => setOptionCategoria(selectedItem) }
-                    defaultButtonText={(optionCategoria !== '')? optionCategoria : 'Selecione a categoria'}
+                    defaultButtonText={(state.categoria !== ''  && route.params.item !== undefined)?
+                        state.categoria : 'Selecione a categoria'}
                     buttonTextAfterSelection={(selectedItem: string) => selectedItem}
                     rowTextForSelection={(item) => item }
                     buttonStyle={stylesCustom.input}
@@ -172,7 +139,8 @@ export function ItemForm ( {route} : Props) : JSX.Element  {
                 <Text style={stylesCustom.title}>Valor</Text>
                 <TextInput
                     style={stylesCustom.input}
-                    placeholder={(placeholderPreco !== '')? String(placeholderPreco) : "99,99"}
+                    placeholder={(state.preco !== '' && route.params.item !== undefined)?
+                         String(state.preco) : "99,99"}
                     placeholderTextColor="#000"
                     onChangeText={handleOnchangeNumber}
                 />
@@ -180,7 +148,8 @@ export function ItemForm ( {route} : Props) : JSX.Element  {
                 <Text style={stylesCustom.title}>Tags</Text>
                 <Tags
                     initialText="tag"
-                    initialTags={route.params.item?.tags || []}
+                    initialTags={(state.tags !== [] && route.params.item !== undefined)?
+                        state.tags :  []}
                     onChangeTags={setValuesTags}
                     renderTag={({ tag, index, onPress }) => (
                         <TouchableOpacity 

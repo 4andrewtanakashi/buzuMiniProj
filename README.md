@@ -26,7 +26,7 @@
 ## Roteiro Extra:
 - [X] Fidelidade do design da interface
 - [ ] Teste dos componentes
-- [ ] Context API
+- [X] Context API
 
 ## Descrição dos commits
 Commits serão feitos de acordo com a seguinte tabela:

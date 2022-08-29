@@ -32,7 +32,6 @@ export async function getMultiple () : Promise<readonly KeyValuePair[]> {
     } catch (e : any) {
         console.log("Erro: ", e);
     }
-    //console.log("getMultiple:", values);
     return values;
 }
 
