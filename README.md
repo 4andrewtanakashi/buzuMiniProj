@@ -18,6 +18,17 @@
 | Storage Assync   |
 | Navigator        |
 
+## Instalação e execução
+```
+    1º) Baixe o projeto e nas pasta utilize os seguintes comandos no terminal:
+    npm i (ou sudo npm i) - Para Instalação das dependências;
+    2º) Coloque um celular com android ou abra um emulador do Android Studio;
+    3º) Abra 2 terminais:
+    npx react-native run-android  (Terminal 1);
+    npm start (Terminal 2).
+```
+
+
 ## Roteiro Básico:
 - [X] CRUD
 - [X] Usar Route Navigation
