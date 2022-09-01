@@ -10,7 +10,7 @@ import {
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp, NativeStackScreenProps } from '@react-navigation/native-stack';
-import SelectDropdownProps from 'react-native-select-dropdown'
+import SelectDropdownProps from 'react-native-select-dropdown';
 import { Button } from '../components/Button';
 import {saveData, setItemData} from '../service/Crud';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';

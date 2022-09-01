@@ -3,7 +3,6 @@ import {StatusBar} from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
-
 import {Home} from './src/pages/Home';
 import {ItemForm} from './src/pages/ItemForm';
 import { RootStackParams } from './src/utils/Utils';

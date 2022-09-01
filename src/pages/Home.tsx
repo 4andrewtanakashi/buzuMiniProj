@@ -5,6 +5,7 @@ import {
     StyleSheet,
     FlatList, //Muitos elementos
     Alert,
+    ActivityIndicator
 } from 'react-native';
 import { useNavigation } from "@react-navigation/native";
 import AntDesign from 'react-native-vector-icons/AntDesign';
@@ -20,13 +21,12 @@ type Props = NativeStackScreenProps<RootStackParams, "Home">;
 export function Home ( {route} : Props) : JSX.Element  {
     const navigation = useNavigation<NativeStackNavigationProp<RootStackParams>>();
 
+    const [isLoading, setIsLoading] = useState(true);
     const [valueList, setValueList] = useState<DataItem[]>([]);
     const [messageItem, setMessageItem] = useState(<></>);
 
-    useEffect(
-        () => {
-            
-            let tempList : DataItem[] = [];
+    async function loadingDatas () {
+        let tempList : DataItem[] = [];
             getMultiple().then(
                 listValues => {
                     listValues.map(elem => tempList.push(JSON.parse(elem[1] || '')));
@@ -42,6 +42,7 @@ export function Home ( {route} : Props) : JSX.Element  {
                         ( !tempList.every( (elem, i) => valueList[i] === elem )) ) {
                         setValueList(tempList);
                     }
+                    setIsLoading(false);
                 }
             ).catch(
                 () => {
@@ -51,13 +52,22 @@ export function Home ( {route} : Props) : JSX.Element  {
                         );
                         if (tempList !== valueList)
                             setValueList(tempList);
+                        setIsLoading(false);
                     }
+                
             );
             if (valueList.length <= 0)
                 setMessageItem(<Text style={[stylesCustom.title]}> 
                     <AntDesign name={'warning'} color="#991" size={30}/>{' '}
                         Não há items </Text>
-                    );
+            );
+            
+    }
+
+    useEffect(
+        () => {
+            
+            loadingDatas();
 
         },
     [valueList, route]); // Toda vez que atualizar o valueInput o useEffect é chamado
@@ -80,32 +90,35 @@ export function Home ( {route} : Props) : JSX.Element  {
 
     return(
         <>
-            <Top/>
-            <View style={stylesCustom.container}>
-                
-                <Button 
-                    value={"Cadastrar"} 
-                    onPress={_ => navigation.navigate("ItemForm", {item: undefined})}
-                />
-
-                {messageItem}
-
-                <FlatList
-                    data={valueList}
-                    keyExtractor={ (item : any)  => item.id  }
-                    renderItem={({item}) => (
-                        <CardItem
-                            item={item}
-                            onPress={() => handleDelete(item.nome, item.id)}
+            
+            {   isLoading? <ActivityIndicator color={"red"} size="large"/> : 
+                <>
+                    <Top/>
+                    <View style={stylesCustom.container}>
+                        
+                        <Button 
+                            value={"Cadastrar"} 
+                            onPress={_ => navigation.navigate("ItemForm", {item: undefined})}
                         />
-                    ) }
-                    extraData={valueList}
-                />
+                        
+                        {messageItem}
 
-
-
-            </View>
+                        <FlatList
+                            data={valueList}
+                            keyExtractor={ (item : any)  => item.id  }
+                            renderItem={({item}) => (
+                                <CardItem
+                                    item={item}
+                                    onPress={() => handleDelete(item.nome, item.id)}
+                                />
+                            ) }
+                            extraData={valueList}
+                        />
+                    </View>
+                </>
+            }
         </>
+        
     );
 }
 

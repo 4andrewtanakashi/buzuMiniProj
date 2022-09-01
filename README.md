@@ -26,6 +26,9 @@
     3º) Abra 2 terminais:
     npx react-native run-android  (Terminal 1);
     npm start (Terminal 2).
+    
+    Teste: npm test
+    (Apenas o botão foi testada, visto que os outros componentes passam Props do Navigator, então não estavam funcionando).
 ```
 
 
@@ -36,7 +39,7 @@
 
 ## Roteiro Extra:
 - [X] Fidelidade do design da interface
-- [ ] Teste dos componentes
+- [X] Teste dos componentes (foi testado apenas o valor do botão)
 - [X] Context API
 
 ## Descrição dos commits
